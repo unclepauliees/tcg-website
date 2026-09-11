@@ -14,6 +14,7 @@ type Chapter = {
   label: string;
   mediaType: "video" | "image";
   mediaUrl: string;
+  mediaUrlMobile?: string;
   eyebrow?: string;
   headline: string;
   rotatingWords?: string[];
@@ -28,6 +29,7 @@ const chapters: Chapter[] = [
     label: "Hero",
     mediaType: "video",
     mediaUrl: `${basePath}/media/hero-loop.mp4`,
+    mediaUrlMobile: `${basePath}/media/hero-loop-mobile.mp4`,
     headline: "We",
     rotatingWords: ["Are Solid.", "Don't Chase Noise.", "Are Concrete Group."],
     body: ["A strategic communications and brand advisory for category-defining brands."],
@@ -290,7 +292,7 @@ function ScrollNarrative({
   narrativeRef: React.RefObject<HTMLElement | null>;
 }) {
   const shouldReduceMotion = useReducedMotion();
-  const [canUseVideo, setCanUseVideo] = useState(false);
+  const [videoSrc, setVideoSrc] = useState<string | null>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end end"],
@@ -302,11 +304,20 @@ function ScrollNarrative({
     });
   }, [chapters.length, scrollYProgress, onActiveIndexChange]);
 
+  const videoChapter = chapters.find((chapter) => chapter.mediaType === "video");
+
   useEffect(() => {
+    if (!videoChapter) return;
     const wide = window.matchMedia("(min-width: 768px)");
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-    const update = () => setCanUseVideo(wide.matches && !reduced.matches && !connection?.saveData);
+    const update = () => {
+      if (reduced.matches || connection?.saveData) {
+        setVideoSrc(null);
+        return;
+      }
+      setVideoSrc(wide.matches ? videoChapter.mediaUrl : (videoChapter.mediaUrlMobile ?? videoChapter.mediaUrl));
+    };
 
     update();
     wide.addEventListener("change", update);
@@ -315,7 +326,7 @@ function ScrollNarrative({
       wide.removeEventListener("change", update);
       reduced.removeEventListener("change", update);
     };
-  }, []);
+  }, [videoChapter]);
 
   return (
     <section ref={ref} className="scroll-narrative" aria-label="The Concrete Group narrative">
@@ -328,9 +339,9 @@ function ScrollNarrative({
               animate={{ opacity: index === activeIndex ? 1 : 0 }}
               transition={{ duration: shouldReduceMotion ? 0 : 0.4, ease: [0, 0, 0.2, 1] }}
             >
-              {chapter.mediaType === "video" && canUseVideo ? (
+              {chapter.mediaType === "video" && videoSrc ? (
                 <video autoPlay muted playsInline preload="none" poster={`${basePath}/media/hero-poster.webp`} className="narrative-video">
-                  <source src={chapter.mediaUrl} type="video/mp4" />
+                  <source src={videoSrc} type="video/mp4" />
                 </video>
               ) : (
                 <div
