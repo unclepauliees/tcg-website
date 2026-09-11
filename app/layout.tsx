@@ -1,28 +1,38 @@
 import type { Metadata, Viewport } from "next";
 import { archivo, inter, spaceMono } from "./fonts";
-import { basePath } from "@/lib/basePath";
+import { basePath, siteUrl } from "@/lib/basePath";
 import "./globals.css";
 
+const title = "THE CONCRETE GROUP";
+const description = "A strategic communications and brand advisory for category-defining brands.";
+const ogImageUrl = `${siteUrl}/media/hero-poster.jpg`;
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://theconcretegrp.com"),
-  title: "THE CONCRETE GROUP",
-  description: "A strategic communications and brand advisory for category-defining brands.",
+  metadataBase: new URL(siteUrl),
+  title,
+  description,
   alternates: {
-    canonical: "https://theconcretegrp.com",
+    canonical: siteUrl,
   },
   openGraph: {
-    title: "THE CONCRETE GROUP",
-    description: "A strategic communications and brand advisory for category-defining brands.",
-    url: "https://theconcretegrp.com",
-    siteName: "THE CONCRETE GROUP",
+    title,
+    description,
+    url: siteUrl,
+    siteName: title,
     images: [
       {
-        url: "/media/hero-poster.jpg",
-        width: 2752,
-        height: 1536,
-        alt: "THE CONCRETE GROUP",
+        url: ogImageUrl,
+        width: 1920,
+        height: 1080,
+        alt: title,
       },
     ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: [ogImageUrl],
   },
   icons: {
     icon: `${basePath}/brand-assets/favicon-32.png`,

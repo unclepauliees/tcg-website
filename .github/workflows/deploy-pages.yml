@@ -28,6 +28,7 @@ jobs:
       - run: npx next build
         env:
           NEXT_PUBLIC_BASE_PATH: /tcg-website
+          NEXT_PUBLIC_SITE_ORIGIN: https://unclepauliees.github.io
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
