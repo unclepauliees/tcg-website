@@ -991,8 +991,15 @@ button {
 }
 
 @media (max-width: 640px) and (max-height: 820px) {
+  /* Short viewports (in-app browser chrome, small phones) need real top
+     clearance so copy doesn't render under the fixed header mark once it
+     fades in past the hero — hence the extra 2.5rem beyond the existing
+     bottom reservation. That shrinks the available box further, so every
+     other rule in this block exists to claw back height: tighter line
+     height, tighter margins, and a de-boxed proof-grid (the three bordered
+     mobile-stacked cards were the single biggest line item in chapter 03). */
   .chapter-copy {
-    max-height: calc(100svh - var(--sp-16));
+    max-height: calc(100svh - var(--sp-16) - 2.5rem);
   }
 
   .chapter-copy h1 {
@@ -1004,12 +1011,29 @@ button {
   }
 
   .chapter-copy p {
+    line-height: 1.45;
     margin-bottom: var(--sp-2);
   }
 
   .expertise-row {
     margin-top: var(--sp-4) !important;
     padding-top: var(--sp-3);
+  }
+
+  .proof-grid {
+    gap: var(--sp-4);
+    margin-top: var(--sp-4);
+  }
+
+  .proof-grid div {
+    background: none;
+    border: none;
+    border-top: 1px solid var(--border-subtle);
+    padding: var(--sp-3) 0 0;
+  }
+
+  .proof-grid h2 {
+    margin-bottom: var(--sp-2);
   }
 }
 
