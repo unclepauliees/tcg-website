@@ -961,7 +961,13 @@ button {
     bottom: var(--sp-16);
   }
 
-  .chapter-copy h1,
+  /* Full-sentence headlines (§02/§03) need a much more conservative scale
+     than the hero's punchy one/two-word line below, or they blow past a
+     readable size and wrap into an overwhelming stack on a phone. */
+  .chapter-copy h1 {
+    font-size: clamp(2rem, 9vw, 3rem);
+  }
+
   .chapter-copy--hero h1 {
     font-size: clamp(2.75rem, 14vw, 4.5rem);
   }
@@ -989,7 +995,10 @@ button {
     max-height: calc(100svh - var(--sp-16));
   }
 
-  .chapter-copy h1,
+  .chapter-copy h1 {
+    font-size: clamp(1.75rem, 7.5vw, 2.75rem);
+  }
+
   .chapter-copy--hero h1 {
     font-size: clamp(2.25rem, 11vw, 4rem);
   }
